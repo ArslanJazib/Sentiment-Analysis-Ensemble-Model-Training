@@ -21,7 +21,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Preprocessor.py" />
     <Compile Include="SentiEntrepreneur.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Sentiment140.csv" />
+    <Content Include="SMILE Dataset.csv" />
+    <Content Include="tweet.txt" />
+    <Content Include="twitter.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
