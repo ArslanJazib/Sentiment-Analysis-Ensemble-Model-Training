@@ -59,10 +59,6 @@ class Data_Preprocessor:
         # Applying the filters created above on tweet
         filtered_result = list(filter(lambda l: l not in stop_words, lower_case))
         # Lemmas are stored in a list
-        print("{0:20}{1:20}".format("Word","Lemma"))
-        for word in filtered_result:
-            print ("{0:20}{1:20}".format(word,wordnet_lemmatizer.lemmatize(word,pos="v")))
-        print ("{0:20}{1:20}".format(word,wordnet_lemmatizer.lemmatize(word,pos="v")))
         lemmas = [wordnet_lemmatizer.lemmatize(t,pos="v") for t in filtered_result]
         return lemmas
 

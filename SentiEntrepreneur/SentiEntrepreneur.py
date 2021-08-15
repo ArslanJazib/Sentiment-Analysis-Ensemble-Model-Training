@@ -20,68 +20,7 @@ from gensim.models import CoherenceModel
 import Preprocessor 
 
 
-def removeEmojify(text):
-    regrex_pattern = re.compile("["
-                u"\U0001F600-\U0001F64F"  # emoticons
-                u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-                u"\U0001F680-\U0001F6FF"  # transport & map symbols
-                u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-                u"\U00002702-\U000027B0"
-                u"\U000024C2-\U0001F251"
-                u"\U0001f926-\U0001f937"
-                u'\U00010000-\U0010ffff'
-                u"\u200d"
-                u"\u2640-\u2642"
-                u"\u2600-\u2B55"
-                u"\u23cf"
-                u"\u23e9"
-                u"\u231a"
-                u"\u3030"
-                u"\ufe0f"
-    "]+", flags=re.UNICODE)
-    return regrex_pattern.sub(r'',text)
 
-def removeUrl(text):
-    text = re.sub(r'''(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))''', '', text, flags=re.MULTILINE) 
-    return text
-
-def removeStopwords(text):
-    stop_words = set(stopwords.words('english')) 
-    text_tokens = word_tokenize(text)
-    tokens_without_sw = [word for word in text_tokens if not word in stop_words]
-    filtered_sentence = (" ").join(tokens_without_sw)
-    return filtered_sentence
-
-def stemmer(text):
-    #create an object of class PorterStemmer
-    porter = PorterStemmer()
-    token_words=word_tokenize(text)
-    token_words
-    stem_sentence=[]
-    for word in token_words:
-        stem_sentence.append(porter.stem(word))
-        stem_sentence.append(" ")
-    #print("{0:20}{1:20}".format("Word","Porter Stemmer"))
-    #for word in token_words:
-    #    print("{0:20}{1:20}".format(word,porter.stem(word)))
-    return "".join(stem_sentence)
-
-def lemmatizer(text):
-    wordnet_lemmatizer = WordNetLemmatizer()
-    sentence = text
-    punctuations="?:!.,;"
-    sentence_words = nltk.word_tokenize(sentence)
-    leema_sentence=[]
-    for word in sentence_words:
-        if word in punctuations:
-            sentence_words.remove(word)
-        else:
-            leema_sentence.append(wordnet_lemmatizer.lemmatize(word,pos="v"))
-            leema_sentence.append(" ")
-    #print("{0:20}{1:20}".format("Word","Lemma"))
-    #for word in sentence_words:
-    #    print ("{0:20}{1:20}".format(word,wordnet_lemmatizer.lemmatize(word,pos="v")))
-    return "".join(leema_sentence)
 
 def term_documentMatrix(tweets):
     #  limit features to 20 terms
@@ -179,6 +118,9 @@ def flatten_tweets():
         tweets_list.append(tweet_obj)
     return tweets_list
 
+def check_imbalance(tweets):
+    print(tweets['target'].value_count())
+
 
 if __name__ == "__main__":
     # Loading Sentiment140 Dataset
@@ -186,8 +128,8 @@ if __name__ == "__main__":
     # Data Preprocessor Object is initlized, Passing dataset into the parameterized constructor
     preprocessor=Preprocessor.Data_Preprocessor(tweets['text'])
     # Fucntion applies all preprocessing functions on tweets and returns a list of lemmas for each tweet
-    leemas=preprocessor.process_tweets()
-    print(leemas)
+    tweets['leemas']=preprocessor.process_tweets()
+    check_imbalance(tweets)
 
     #start_time = time.time()
     #consumer_key=" "
@@ -214,4 +156,3 @@ if __name__ == "__main__":
     #print("Total tweets collected",len(ds_tweets.index))
     #print("-----------------------Execution Time-----------------------")
     #print("--- %s seconds ---" % (time.time() - start_time))
-
