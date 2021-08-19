@@ -21,8 +21,17 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Api_Authentication.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataSet_insight.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Preprocessor.py" />
     <Compile Include="SentiEntrepreneur.py" />
+    <Compile Include="SVM_Classifier.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Sentiment140.csv" />

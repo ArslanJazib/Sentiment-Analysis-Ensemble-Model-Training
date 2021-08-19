@@ -10,7 +10,6 @@ from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import API
 from tweepy import Stream
-from sklearn.feature_extraction.text import CountVectorizer
 from pandas.api.types import CategoricalDtype
 from plotnine import *
 from wordcloud import WordCloud ,STOPWORDS
@@ -18,8 +17,8 @@ from plotnine import ggplot, aes, geom_bar
 from gensim.utils import simple_preprocess
 from gensim.models import CoherenceModel
 import Preprocessor 
-
-
+import SVM_Classifier
+import DataSet_insight
 
 
 def term_documentMatrix(tweets):
@@ -118,41 +117,31 @@ def flatten_tweets():
         tweets_list.append(tweet_obj)
     return tweets_list
 
-def check_imbalance(tweets):
-    print(tweets['target'].value_count())
+
+
+
+
 
 
 if __name__ == "__main__":
     # Loading Sentiment140 Dataset
-    tweets = pd.read_csv("Sentiment140.csv" ,names=['target', 'id', 'date','flag','user','text'])
+    tweets = pd.read_csv("Sentiment140.csv" ,names=['target', 'id', 'date','flag','user','text'],encoding='latin-1')
     # Data Preprocessor Object is initlized, Passing dataset into the parameterized constructor
     preprocessor=Preprocessor.Data_Preprocessor(tweets['text'])
-    # Fucntion applies all preprocessing functions on tweets and returns a list of lemmas for each tweet
-    tweets['leemas']=preprocessor.process_tweets()
-    check_imbalance(tweets)
+    # Fucntion applies all preprocessing functions on tweets and return lemmatized text for each tweet
+    tweets['lemmatized_text']=preprocessor.process_tweets()
+    svm_classifier=SVM_Classifier.SupportVectorMachine(tweets)
+    svm_classifier.svm_classifiy()
 
-    #start_time = time.time()
-    #consumer_key=" "
-    #consumer_secret=""
-    #access_token=" "
-    #access_token_secret=""
-    #auth = OAuthHandler(consumer_key,consumer_secret)
-    #auth.set_access_token(access_token,access_token_secret)
-    #listen = SListener()
-    #stream = Stream(auth,listen)
-    #stream.filter(track=['Python'],languages=["en"]);
-    #tweets = flatten_tweets()
-    # Create a DataFrame from `tweets`
-    #ds_tweets = pd.DataFrame(tweets)
-    # Print out tweets from this dataset
-    #print(ds_tweets['text'].values)
-    # Term Document Matrix
-    #tdm=term_documentMatrix(ds_tweets['text'].values)
-    # Finding associations
-    #findAssociations(tdm,[tdm.index[0],tdm.index[1]],0.8)
-    # Word Cloud and Bar Chart
-    #visualizations(tdm,ds_tweets['text'].values)    
-    # Counting the data collected using the API
-    #print("Total tweets collected",len(ds_tweets.index))
-    #print("-----------------------Execution Time-----------------------")
-    #print("--- %s seconds ---" % (time.time() - start_time))
+    # Insight object being initialzed for geneting insights about the dataset being used
+    #report=DataSet_insight.Reporter(tweets)
+    # Will display information on data set
+    #report.report_generator()
+
+
+    
+    
+
+
+
+

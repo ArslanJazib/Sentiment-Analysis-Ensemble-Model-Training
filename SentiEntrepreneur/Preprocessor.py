@@ -60,7 +60,15 @@ class Data_Preprocessor:
         filtered_result = list(filter(lambda l: l not in stop_words, lower_case))
         # Lemmas are stored in a list
         lemmas = [wordnet_lemmatizer.lemmatize(t,pos="v") for t in filtered_result]
+        # Lemmatized text is joined into a sentence which is to be used for model training
+        lemmas=" ".join(lemmas)    
         return lemmas
+
+    def ngrams_generator(self,input_list):
+        #onegrams = input_list
+        bigrams = [' '.join(t) for t in list(zip(input_list, input_list[1:]))]
+        trigrams = [' '.join(t) for t in list(zip(input_list, input_list[1:], input_list[2:]))]
+        return bigrams+trigrams
 
 
 
