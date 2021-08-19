@@ -126,6 +126,10 @@ def flatten_tweets():
 if __name__ == "__main__":
     # Loading Sentiment140 Dataset
     tweets = pd.read_csv("Sentiment140.csv" ,names=['target', 'id', 'date','flag','user','text'],encoding='latin-1')
+    # Postive = 1 & Negative = 0
+    tweets.target = tweets.target.replace({0: 0, 4: 1})
+    # Making a smaller sample of the data
+    tweets = tweets.sample(n=100000)
     # Data Preprocessor Object is initlized, Passing dataset into the parameterized constructor
     preprocessor=Preprocessor.Data_Preprocessor(tweets['text'])
     # Fucntion applies all preprocessing functions on tweets and return lemmatized text for each tweet
