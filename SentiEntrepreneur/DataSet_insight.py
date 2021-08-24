@@ -32,15 +32,6 @@ class Reporter:
         return bigrams+trigrams
 
 
-    # To count the most frequent words
-    def count_words(self,input):
-        cnt = collections.Counter()
-        for row in input:
-            for word in row:
-                cnt[word] += 1
-        return cnt
-
-
 
 
 

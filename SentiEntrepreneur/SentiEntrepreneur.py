@@ -126,21 +126,78 @@ def flatten_tweets():
 if __name__ == "__main__":
     # Loading Sentiment140 Dataset
     tweets = pd.read_csv("Sentiment140.csv" ,names=['target', 'id', 'date','flag','user','text'],encoding='latin-1')
+
     # Postive = 1 & Negative = 0
     tweets.target = tweets.target.replace({0: 0, 4: 1})
-    # Making a smaller sample of the data
-    tweets = tweets.sample(n=100000)
+
+    # Making smaller samples of the dataset to train mutiple models because of hardware restrictions
+    
+    # Sample 1
+    tweets_pos = tweets.iloc[0:99999]
+    tweets_neg = tweets.iloc[800000:899999]
+    # Concatenating positive & negative samples
+    frames = [tweets_pos, tweets_neg]
+    tweets = pd.concat(frames)
+
+    # Sample 2
+    #tweets_pos = tweets.iloc[100000:199999]
+    #tweets_neg = tweets.iloc[900000:999999]
+    # Concatenating positive & negative sample
+    #frames = [tweets_pos, tweets_neg]
+    #tweets = pd.concat(frames)
+
+    # Sample 3
+    #tweets_pos = tweets.iloc[200000:299999]
+    #tweets_neg = tweets.iloc[1000000:1099999]
+    # Concatenating positive & negative sample
+    #frames = [tweets_pos, tweets_neg]
+    #tweets = pd.concat(frames)
+
+    # Sample 4
+    #tweets_pos = tweets.iloc[300000:399999]
+    #tweets_neg = tweets.iloc[1100000:1199999]
+    # Concatenating positive & negative sample
+    #frames = [tweets_pos, tweets_neg]
+    #tweets = pd.concat(frames)
+
+    # Sample 5
+    #tweets_pos = tweets.iloc[400000:499999]
+    #tweets_neg = tweets.iloc[1200000:1299999]
+    # Concatenating positive & negative sample
+    #frames = [tweets_pos, tweets_neg]
+    #tweets = pd.concat(frames)
+
+    # Sample 6
+    #tweets_pos = tweets.iloc[500000:599999]
+    #tweets_neg = tweets.iloc[1300000:1399999]
+    # Concatenating positive & negative sample
+    #frames = [tweets_pos, tweets_neg]
+    #tweets = pd.concat(frames)
+
+    # Sample 7
+    #tweets_pos = tweets.iloc[600000:699999]
+    #tweets_neg = tweets.iloc[1400000:1499999]
+    # Concatenating positive & negative sample
+    #frames = [tweets_pos, tweets_neg]
+    #tweets = pd.concat(frames)
+
+    # Sample 8
+    #tweets_pos = tweets.iloc[700000:799999]
+    #tweets_neg = tweets.iloc[1500000:1599999]
+    # Concatenating positive & negative sample
+    #frames = [tweets_pos, tweets_neg]
+    #tweets = pd.concat(frames)
+
+
     # Data Preprocessor Object is initlized, Passing dataset into the parameterized constructor
     preprocessor=Preprocessor.Data_Preprocessor(tweets['text'])
+    
     # Fucntion applies all preprocessing functions on tweets and return lemmatized text for each tweet
     tweets['lemmatized_text']=preprocessor.process_tweets()
+    
+    # Classifying using support vector machine
     svm_classifier=SVM_Classifier.SupportVectorMachine(tweets)
     svm_classifier.svm_classifiy()
-
-    # Insight object being initialzed for geneting insights about the dataset being used
-    #report=DataSet_insight.Reporter(tweets)
-    # Will display information on data set
-    #report.report_generator()
 
 
     

@@ -1,3 +1,22 @@
+import pandas as pd
+import time
+import tweepy
+import json
+import matplotlib.pyplot as plt
+import numpy as np
+import gensim
+import gensim.corpora as corpora
+from tweepy.streaming import StreamListener
+from tweepy import OAuthHandler
+from tweepy import API
+from tweepy import Stream
+from pandas.api.types import CategoricalDtype
+from plotnine import *
+from wordcloud import WordCloud ,STOPWORDS
+from plotnine import ggplot, aes, geom_bar
+from gensim.utils import simple_preprocess
+from gensim.models import CoherenceModel
+
 class Api_Authentication(object):
     """description of class"""
     #start_time = time.time()

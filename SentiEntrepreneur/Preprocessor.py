@@ -64,12 +64,6 @@ class Data_Preprocessor:
         lemmas=" ".join(lemmas)    
         return lemmas
 
-    def ngrams_generator(self,input_list):
-        #onegrams = input_list
-        bigrams = [' '.join(t) for t in list(zip(input_list, input_list[1:]))]
-        trigrams = [' '.join(t) for t in list(zip(input_list, input_list[1:], input_list[2:]))]
-        return bigrams+trigrams
-
 
 
 
