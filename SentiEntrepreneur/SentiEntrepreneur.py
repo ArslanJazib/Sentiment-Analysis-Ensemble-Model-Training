@@ -133,11 +133,11 @@ if __name__ == "__main__":
     # Making smaller samples of the dataset to train mutiple models because of hardware restrictions
     
     # Sample 1
-    tweets_pos = tweets.iloc[0:99999]
-    tweets_neg = tweets.iloc[800000:899999]
+    #tweets_pos = tweets.iloc[0:99999]
+    #tweets_neg = tweets.iloc[800000:899999]
     # Concatenating positive & negative samples
-    frames = [tweets_pos, tweets_neg]
-    tweets = pd.concat(frames)
+    #frames = [tweets_pos, tweets_neg]
+    #tweets = pd.concat(frames)
 
     # Sample 2
     #tweets_pos = tweets.iloc[100000:199999]
@@ -182,11 +182,11 @@ if __name__ == "__main__":
     #tweets = pd.concat(frames)
 
     # Sample 8
-    #tweets_pos = tweets.iloc[700000:799999]
-    #tweets_neg = tweets.iloc[1500000:1599999]
+    tweets_pos = tweets.iloc[700000:799999]
+    tweets_neg = tweets.iloc[1500000:1599999]
     # Concatenating positive & negative sample
-    #frames = [tweets_pos, tweets_neg]
-    #tweets = pd.concat(frames)
+    frames = [tweets_pos, tweets_neg]
+    tweets = pd.concat(frames)
 
 
     # Data Preprocessor Object is initlized, Passing dataset into the parameterized constructor

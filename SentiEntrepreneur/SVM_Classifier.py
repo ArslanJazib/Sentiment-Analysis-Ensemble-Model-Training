@@ -43,7 +43,7 @@ class SupportVectorMachine:
         print(self.y_train.value_counts(normalize=True))
         svm_classifier_linear.fit(vectors[0], self.y_train)
         # Save the model as a pickle in a file
-        joblib.dump(svm_classifier_linear, 'SVM_Linear_Classifier1.pkl')
+        joblib.dump(svm_classifier_linear, 'SVM_Linear_Classifier8.pkl')
 
         #t1 = time.time()
         #prediction_linear = svm_classifier_linear.predict(vectors[1])
