@@ -260,3 +260,5 @@ paket-files/
 __pycache__/
 *.pyc
 /SentiEntrepreneur/Sentiment140.csv
+/SentiEntrepreneur/Sentiment140_processed.csv
+/SentiEntrepreneur/Sentiment140_features.pkl

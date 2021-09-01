@@ -19,7 +19,6 @@ class Reporter:
       self.tweets[(tweets['target'] == 4)][['grams']].apply(self.count_words)['grams'].most_common(20)
       print("20 of the most frequetnly occured n-grams having negative label\n")
       self.tweets[(tweets['target'] == 0)][['grams']].apply(self.count_words)['grams'].most_common(20)
-    
 
     def check_imbalance(self,tweets):
         print(tweets['target'].value_counts(normalize=True))

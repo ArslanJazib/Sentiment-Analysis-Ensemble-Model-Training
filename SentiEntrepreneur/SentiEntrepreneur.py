@@ -1,7 +1,9 @@
 import pandas as pd
 import time
+import joblib
 import tweepy
 import json
+import nltk
 import matplotlib.pyplot as plt
 import numpy as np
 import gensim
@@ -17,192 +19,72 @@ from plotnine import ggplot, aes, geom_bar
 from gensim.utils import simple_preprocess
 from gensim.models import CoherenceModel
 import Preprocessor 
+from sklearn.feature_extraction.text import CountVectorizer
+from scipy.sparse import hstack
 import SVM_Classifier
-import DataSet_insight
-
-
-def term_documentMatrix(tweets):
-    #  limit features to 20 terms
-    vect = CountVectorizer(min_df=0., max_df=1.0, max_features=len(tweets))
-    Z = vect.fit_transform(tweets)
-    tdm=pd.DataFrame(Z.A, columns=vect.get_feature_names())
-    tdm=tdm.transpose()
-    tdm.index.name = "Terms"
-    print(tdm.to_string())
-    return tdm
-
-def visualizations(tdm,tweets):
-    # Bar PLot
-    sum=tdm.sum(axis = 1).reset_index(name ="Count")
-    plot=ggplot(sum,aes(x="Terms",y="Count")) + geom_bar(stat="identity") +\
-    xlab("Terms") + ylab("Count") + coord_flip()
-    print(plot)
-    # Word Cloud
-    text = tweets
-    wordcloud = WordCloud(
-        width = 3000,
-        height = 2000,
-        background_color = 'white',
-        stopwords = STOPWORDS
-        ).generate(str(text))
-    plt.figure(2)
-    plt.imshow(wordcloud, interpolation = 'bilinear')
-    plt.axis('off')
-    plt.tight_layout(pad=0)
-    plt.show()
-
-def findAssociations(tdm,word_list,corr_coef):
-    similarity_matrix=pd.DataFrame(np.corrcoef(tdm.T),index=tdm.index,columns=tdm.index)
-    print(similarity_matrix)
-    for value in word_list:
-        print(value)
-        print(similarity_matrix[similarity_matrix[value]>corr_coef][value].sort_values(ascending=False),"\n")
-
-
-tweet_list=[]
-class SListener(StreamListener):
-    def __init__(self,api=None):
-        super(SListener,self).__init__()
-        self.num_tweets=0
-        self.file=open("tweet.txt","w")
-    def on_status (self,status):
-        tweet=status._json
-        # All in lowercase
-        tweet['text']=tweet['text'].lower()
-        # Remove emoji
-        tweet['text']=removeEmojify(tweet['text'])
-        # Remove URL
-        tweet['text']=removeUrl(tweet['text'])
-        # Remove Stop words
-        tweet['text']=removeStopwords(tweet['text'])
-        # Stemming Tweets
-        # For displaying differnce between Stemming and Lemmatization
-        temp=tweet['text']
-        tweet['text']=stemmer(tweet['text'])
-        # Lemmatizing Tweets
-        temp=lemmatizer(temp)
-        self.file.write(json.dumps(tweet)+ '\n')
-        tweet_list.append(status)
-        self.num_tweets+=1
-        if self.num_tweets<20:
-            return True
-        else:
-            return False
-        self.file.close()
-
-
-def flatten_tweets():
-    """ Flattens out tweet dictionaries so relevant JSON
-        is in a top-level dictionary."""
-    tweets_list = []
-   
-    # Iterate through each tweet
-    for tweet in open('tweet.txt','r'):
-        tweet_obj = json.loads(tweet)
-        # Store the user screen name in 'user-screen_name'
-        tweet_obj['user-screen_name'] = tweet_obj['user']['screen_name']
-    
-        # Check if this is a 140+ character tweet
-        if 'extended_tweet' in tweet_obj:
-            # Store the extended tweet text in 'extended_tweet-full_text'
-            tweet_obj['extended_tweet-full_text'] = tweet_obj['extended_tweet']['full_text']
-    
-        if 'retweeted_status' in tweet_obj:
-            # Store the retweet user screen name in 'retweeted_status-user-screen_name'
-            tweet_obj['retweeted_status-user-screen_name'] = tweet_obj['retweeted_status']['user']['screen_name']
-
-            # Store the retweet text in 'retweeted_status-text'
-            tweet_obj['retweeted_status-text'] = tweet_obj['retweeted_status']['text']
-            
-        tweets_list.append(tweet_obj)
-    return tweets_list
+import Create_Svm_Classifiers
 
 
 
 
 
-
-
-if __name__ == "__main__":
+def generate_preprocessed_csv():
     # Loading Sentiment140 Dataset
     tweets = pd.read_csv("Sentiment140.csv" ,names=['target', 'id', 'date','flag','user','text'],encoding='latin-1')
 
     # Postive = 1 & Negative = 0
     tweets.target = tweets.target.replace({0: 0, 4: 1})
 
-    # Making smaller samples of the dataset to train mutiple models because of hardware restrictions
-    
-    # Sample 1
-    #tweets_pos = tweets.iloc[0:99999]
-    #tweets_neg = tweets.iloc[800000:899999]
-    # Concatenating positive & negative samples
-    #frames = [tweets_pos, tweets_neg]
-    #tweets = pd.concat(frames)
-
-    # Sample 2
-    #tweets_pos = tweets.iloc[100000:199999]
-    #tweets_neg = tweets.iloc[900000:999999]
-    # Concatenating positive & negative sample
-    #frames = [tweets_pos, tweets_neg]
-    #tweets = pd.concat(frames)
-
-    # Sample 3
-    #tweets_pos = tweets.iloc[200000:299999]
-    #tweets_neg = tweets.iloc[1000000:1099999]
-    # Concatenating positive & negative sample
-    #frames = [tweets_pos, tweets_neg]
-    #tweets = pd.concat(frames)
-
-    # Sample 4
-    #tweets_pos = tweets.iloc[300000:399999]
-    #tweets_neg = tweets.iloc[1100000:1199999]
-    # Concatenating positive & negative sample
-    #frames = [tweets_pos, tweets_neg]
-    #tweets = pd.concat(frames)
-
-    # Sample 5
-    #tweets_pos = tweets.iloc[400000:499999]
-    #tweets_neg = tweets.iloc[1200000:1299999]
-    # Concatenating positive & negative sample
-    #frames = [tweets_pos, tweets_neg]
-    #tweets = pd.concat(frames)
-
-    # Sample 6
-    #tweets_pos = tweets.iloc[500000:599999]
-    #tweets_neg = tweets.iloc[1300000:1399999]
-    # Concatenating positive & negative sample
-    #frames = [tweets_pos, tweets_neg]
-    #tweets = pd.concat(frames)
-
-    # Sample 7
-    #tweets_pos = tweets.iloc[600000:699999]
-    #tweets_neg = tweets.iloc[1400000:1499999]
-    # Concatenating positive & negative sample
-    #frames = [tweets_pos, tweets_neg]
-    #tweets = pd.concat(frames)
-
-    # Sample 8
-    tweets_pos = tweets.iloc[700000:799999]
-    tweets_neg = tweets.iloc[1500000:1599999]
-    # Concatenating positive & negative sample
-    frames = [tweets_pos, tweets_neg]
-    tweets = pd.concat(frames)
-
-
     # Data Preprocessor Object is initlized, Passing dataset into the parameterized constructor
     preprocessor=Preprocessor.Data_Preprocessor(tweets['text'])
-    
+
     # Fucntion applies all preprocessing functions on tweets and return lemmatized text for each tweet
     tweets['lemmatized_text']=preprocessor.process_tweets()
+
+    tweets.to_csv("Sentiment140_processed.csv")
+
+    # Deleting the tweets dataframe to free the used memeory
+    del tweets
+
+
+def feature_generator(tweets):
+    # Create count vectorizer to extract features from text using frequncy of occurance
+    vectorizer = CountVectorizer()
+    vectorized_data = vectorizer.fit_transform(tweets['lemmatized_text'])
+    indexed_data = hstack((np.array(range(0,vectorized_data.shape[0]))[:,None], vectorized_data))
+    joblib.dump(indexed_data, 'Sentiment140_features.pkl')
+    del vectorizer
+    del vectorized_data
+    del indexed_data
+
+
+
+if __name__ == "__main__":
+
+    # This function is to be called once for the Data Pre-Processing Phase
+    #generate_preprocessed_csv()
+
+    # Loading Sentiment140 Dataset
+    tweets = pd.read_csv("Sentiment140_processed.csv",encoding='latin-1')
+    # drop the first column in dataset
+    tweets = tweets.iloc[: , 1:]
+
+    # Droping the Nan rows
+    tweets = tweets.dropna(subset=['lemmatized_text'])
+
+   
+    # This function will be called once to generate features from the complete dataset
+    #feature_generator(tweets)
+
+    features = joblib.load('Sentiment140_features.pkl')
+    
+    # This function is to be called once for training SVM base classifiers 
+    #creator=Create_Svm_Classifiers.Create(target,text)
+    #creator.train_svm_models()
+    
+    #tweets=tweets.sample(n=200000, random_state=1)
     
     # Classifying using support vector machine
-    svm_classifier=SVM_Classifier.SupportVectorMachine(tweets)
+    svm_classifier=SVM_Classifier.SupportVectorMachine(features, tweets)
+    #svm_classifier.svm_ensembleClassifier()
     svm_classifier.svm_classifiy()
-
-
-    
-    
-
-
-
-

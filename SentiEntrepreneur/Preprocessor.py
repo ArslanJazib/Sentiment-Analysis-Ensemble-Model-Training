@@ -3,6 +3,7 @@ import re, nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize 
+from textblob import TextBlob
 
 class Data_Preprocessor:
     """This class will pre process the data for the model"""
@@ -51,7 +52,17 @@ class Data_Preprocessor:
         # To create lemmas from tweet
         wordnet_lemmatizer = WordNetLemmatizer()
         # Removing punctuations
-        only_letters = re.sub("[^a-zA-Z]", " ",tweet) 
+        only_letters = re.sub("[^a-zA-Z]", " ",tweet)
+        # Removing tags @
+        tweet_list = only_letters.split()
+        index = 0
+        while index < len(tweet_list):
+            if tweet_list[index][0] == '@':
+                tweet_list.remove(tweet_list[index])
+                index = 0
+            else:
+                index+=1
+        only_letters =" ".join([str(element) for element in tweet_list])
         # Creating tokens from tweet
         tokens = nltk.word_tokenize(only_letters)[2:]
         # Lower case each letter within the tweet
