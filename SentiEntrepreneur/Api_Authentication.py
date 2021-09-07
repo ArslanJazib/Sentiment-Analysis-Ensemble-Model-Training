@@ -4,8 +4,6 @@ import tweepy
 import json
 import matplotlib.pyplot as plt
 import numpy as np
-import gensim
-import gensim.corpora as corpora
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import API

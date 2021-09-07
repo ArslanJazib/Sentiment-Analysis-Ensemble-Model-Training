@@ -24,10 +24,10 @@
     <Compile Include="Api_Authentication.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Create_Svm_Classifiers.py">
+    <Compile Include="DataSet_insight.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataSet_insight.py">
+    <Compile Include="NeuralNetwork_Classifier.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Preprocessor.py" />
@@ -37,10 +37,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Sentiment140.csv" />
-    <Content Include="Sentiment140_features.pkl" />
-    <Content Include="Sentiment140_processed.csv" />
-    <Content Include="SMILE Dataset.csv" />
     <Content Include="tweet.txt" />
     <Content Include="twitter.jpg" />
   </ItemGroup>

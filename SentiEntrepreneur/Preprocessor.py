@@ -3,7 +3,6 @@ import re, nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize 
-from textblob import TextBlob
 
 class Data_Preprocessor:
     """This class will pre process the data for the model"""

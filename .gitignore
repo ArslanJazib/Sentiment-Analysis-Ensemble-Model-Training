@@ -262,3 +262,10 @@ __pycache__/
 /SentiEntrepreneur/Sentiment140.csv
 /SentiEntrepreneur/Sentiment140_processed.csv
 /SentiEntrepreneur/Sentiment140_features.pkl
+/SentiEntrepreneur/Resources/glove.6B.100d.txt
+/SentiEntrepreneur/Resources/Sentiment140.csv
+/SentiEntrepreneur/Resources/Sentiment140_features.pkl
+/SentiEntrepreneur/Resources/Sentiment140_processed.csv
+/SentiEntrepreneur/Resources/SMILE Dataset.csv
+/SentiEntrepreneur/Resources/Svm_Classifier_linear.pkl
+/SentiEntrepreneur/Resources/SVM_vectorizer.pkl

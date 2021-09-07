@@ -6,23 +6,17 @@ import json
 import nltk
 import matplotlib.pyplot as plt
 import numpy as np
-import gensim
-import gensim.corpora as corpora
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import API
 from tweepy import Stream
 from pandas.api.types import CategoricalDtype
-from plotnine import *
-from wordcloud import WordCloud ,STOPWORDS
-from plotnine import ggplot, aes, geom_bar
-from gensim.utils import simple_preprocess
-from gensim.models import CoherenceModel
 import Preprocessor 
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import classification_report
 from scipy.sparse import hstack
 import SVM_Classifier
-import Create_Svm_Classifiers
+import NeuralNetwork_Classifier as neural
 
 
 
@@ -30,7 +24,7 @@ import Create_Svm_Classifiers
 
 def generate_preprocessed_csv():
     # Loading Sentiment140 Dataset
-    tweets = pd.read_csv("Sentiment140.csv" ,names=['target', 'id', 'date','flag','user','text'],encoding='latin-1')
+    tweets = pd.read_csv("Resources/Sentiment140.csv" ,names=['target', 'id', 'date','flag','user','text'],encoding='latin-1')
 
     # Postive = 1 & Negative = 0
     tweets.target = tweets.target.replace({0: 0, 4: 1})
@@ -41,18 +35,39 @@ def generate_preprocessed_csv():
     # Fucntion applies all preprocessing functions on tweets and return lemmatized text for each tweet
     tweets['lemmatized_text']=preprocessor.process_tweets()
 
-    tweets.to_csv("Sentiment140_processed.csv")
+    # To remove the extra 0th column of indexes
+    tweets = tweets.iloc[: , 1:]
 
-    # Deleting the tweets dataframe to free the used memeory
+    # Droping the Nan rows
+    tweets = tweets.dropna(subset=['lemmatized_text'])
+
+    # Creating a temporary dataframe to hold the suffled data
+    shuffled_Tweets = pd.DataFrame(0, index=np.arange(1546126), columns=['target', 'id', 'date','flag','user','text','lemmatized_text'])
+
+    # Negative values from the 0th index till 773062 are placed at even index 
+    shuffled_Tweets[0:1546124:2]=tweets[0:773062]
+    
+    # Positive values from the 780390 index till 1553452 are placed at even index 
+    shuffled_Tweets[1:1546125:2]=tweets[780390:1553452]
+    
+    # Remaing extra negative tweets from index 773063 to 780380 are appended at the end of the dataframe
+    shuffled_Tweets=pd.concat([shuffled_Tweets, tweets[773063:780389]])
+
+    shuffled_Tweets.to_csv("Resources/Sentiment140_processed.csv")
+
+    # Deleting the variables to free used memeory
     del tweets
+    del shuffled_Tweets
+    del preprocessor
 
 
 def feature_generator(tweets):
     # Create count vectorizer to extract features from text using frequncy of occurance
     vectorizer = CountVectorizer()
     vectorized_data = vectorizer.fit_transform(tweets['lemmatized_text'])
+    joblib.dump(vectorizer, 'Resources/SVM_vectorizer.pkl')
     indexed_data = hstack((np.array(range(0,vectorized_data.shape[0]))[:,None], vectorized_data))
-    joblib.dump(indexed_data, 'Sentiment140_features.pkl')
+    joblib.dump(indexed_data, 'Resources/Sentiment140_features.pkl')
     del vectorizer
     del vectorized_data
     del indexed_data
@@ -65,26 +80,34 @@ if __name__ == "__main__":
     #generate_preprocessed_csv()
 
     # Loading Sentiment140 Dataset
-    tweets = pd.read_csv("Sentiment140_processed.csv",encoding='latin-1')
-    # drop the first column in dataset
-    tweets = tweets.iloc[: , 1:]
+    tweets = pd.read_csv("Resources/Sentiment140_processed.csv",encoding='latin-1')
 
-    # Droping the Nan rows
-    tweets = tweets.dropna(subset=['lemmatized_text'])
-
-   
     # This function will be called once to generate features from the complete dataset
     #feature_generator(tweets)
 
-    features = joblib.load('Sentiment140_features.pkl')
-    
-    # This function is to be called once for training SVM base classifiers 
-    #creator=Create_Svm_Classifiers.Create(target,text)
-    #creator.train_svm_models()
-    
-    #tweets=tweets.sample(n=200000, random_state=1)
+    #features = joblib.load('/Resources/Sentiment140_features.pkl')
     
     # Classifying using support vector machine
-    svm_classifier=SVM_Classifier.SupportVectorMachine(features, tweets)
+    #svm_classifier=SVM_Classifier.SupportVectorMachine(features, tweets)
+    
+    # Model Training SVM
     #svm_classifier.svm_ensembleClassifier()
-    svm_classifier.svm_classifiy()
+
+    # Model Testing SVM
+    #svm_classifier.classification_report()
+
+    # Classifying using Recurrent Neural Network (LSTM)
+    neural_classifier=neural.NeuralNetwork_Classifier(tweets)
+
+    neural_classifier.lstm_classification()
+
+
+
+
+
+
+
+
+
+
+
