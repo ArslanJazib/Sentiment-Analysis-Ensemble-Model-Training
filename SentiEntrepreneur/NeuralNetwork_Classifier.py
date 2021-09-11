@@ -21,6 +21,10 @@ from tqdm import tqdm
 from time import sleep
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
+from keras.models import load_model
+from sklearn.metrics import classification_report
+
+
 
 class NeuralNetwork_Classifier(object):
     """To create an LSTM Neural Network"""
@@ -37,13 +41,13 @@ class NeuralNetwork_Classifier(object):
     def prepare_embedding_layer(self):
         tokenizer = Tokenizer(num_words=5000)
         tokenizer.fit_on_texts(self.X_train)
+        # Saving tokenizer
+        joblib.dump(tokenizer, 'Resources/lstm_tokenizer.pkl')
         self.X_train = tokenizer.texts_to_sequences(self.X_train)
-        self.X_test = tokenizer.texts_to_sequences(self.X_test)
         # Adding 1 because of reserved 0 index
         self.vocab_size = len(tokenizer.word_index) + 1
         self.maxlen = 100
         self.X_train = pad_sequences(self.X_train, padding='post', maxlen=self.maxlen)
-        self.X_test = pad_sequences(self.X_test, padding='post', maxlen=self.maxlen)
         embeddings_dictionary = dict()
         glove_file = open('Resources/glove.6B.100d.txt', encoding="utf8")
         for line in glove_file:
@@ -78,5 +82,23 @@ class NeuralNetwork_Classifier(object):
         model.save("Resources/NeuralNetworkLSTM.h5")
         print("Saved model to disk")
 
+    def classification_report(self):
+        
+        # Pre-Trained LSTM Classifier
+        lstm_classifier = load_model('Resources/NeuralNetworkLSTM.h5')
+
+        # LSTM Tokenizer used for training
+        tokenizer = joblib.load('Resources/lstm_tokenizer.pkl')
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.tweets['lemmatized_text'], self.tweets['target'], test_size=0.20, random_state=42)
+        self.X_test = tokenizer.texts_to_sequences(self.X_test)
+        pred = pad_sequences(self.X_test, padding='post', maxlen=100)
+
+        # Preditcing test data values
+        prediction=lstm_classifier.predict_classes(pred)
+
+        # Classification report
+        report = classification_report(self.y_test, prediction)
+
+        print(report)
 
 

@@ -269,3 +269,9 @@ __pycache__/
 /SentiEntrepreneur/Resources/SMILE Dataset.csv
 /SentiEntrepreneur/Resources/Svm_Classifier_linear.pkl
 /SentiEntrepreneur/Resources/SVM_vectorizer.pkl
+/SentiEntrepreneur/Svm_Classifier_linear.pkl
+/SentiEntrepreneur/SVM_vectorizer.pkl
+/SentiEntrepreneur/Resources/Vectorizer.pkl
+/SentiEntrepreneur/Resources/NeuralNetworkLSTM.h5
+/SentiEntrepreneur/Resources/lstm_tokenizer.pkl
+/SentiEntrepreneur/Resources/KMeans_clusters.pkl

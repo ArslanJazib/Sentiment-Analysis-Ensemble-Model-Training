@@ -17,6 +17,7 @@ from sklearn.metrics import classification_report
 from scipy.sparse import hstack
 import SVM_Classifier
 import NeuralNetwork_Classifier as neural
+import KMeans_Clusterer as kmeans
 
 
 
@@ -65,7 +66,7 @@ def feature_generator(tweets):
     # Create count vectorizer to extract features from text using frequncy of occurance
     vectorizer = CountVectorizer()
     vectorized_data = vectorizer.fit_transform(tweets['lemmatized_text'])
-    joblib.dump(vectorizer, 'Resources/SVM_vectorizer.pkl')
+    joblib.dump(vectorizer, 'Resources/Vectorizer.pkl')
     indexed_data = hstack((np.array(range(0,vectorized_data.shape[0]))[:,None], vectorized_data))
     joblib.dump(indexed_data, 'Resources/Sentiment140_features.pkl')
     del vectorizer
@@ -85,7 +86,7 @@ if __name__ == "__main__":
     # This function will be called once to generate features from the complete dataset
     #feature_generator(tweets)
 
-    #features = joblib.load('/Resources/Sentiment140_features.pkl')
+    features = joblib.load('Resources/Sentiment140_features.pkl')
     
     # Classifying using support vector machine
     #svm_classifier=SVM_Classifier.SupportVectorMachine(features, tweets)
@@ -97,9 +98,23 @@ if __name__ == "__main__":
     #svm_classifier.classification_report()
 
     # Classifying using Recurrent Neural Network (LSTM)
-    neural_classifier=neural.NeuralNetwork_Classifier(tweets)
+    #neural_classifier=neural.NeuralNetwork_Classifier(tweets)
 
-    neural_classifier.lstm_classification()
+    # Model Training LSTM
+    #neural_classifier.lstm_classification()
+
+    # Model Testing SVM
+    #neural_classifier.classification_report()
+
+    # Clustering using KMeans
+    kmeans_cluster=kmeans.KmeansClusterer(features, tweets)
+    
+    # Model Training KMeans
+    #kmeans_cluster.kmeans_cluster()
+
+    # Model Testing KMeans
+    kmeans_cluster.classification_report()
+
 
 
 
