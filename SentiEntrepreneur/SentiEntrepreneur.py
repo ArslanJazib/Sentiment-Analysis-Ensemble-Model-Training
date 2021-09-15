@@ -18,6 +18,7 @@ from scipy.sparse import hstack
 import SVM_Classifier
 import NeuralNetwork_Classifier as neural
 import KMeans_Clusterer as kmeans
+import NaiveBayes_Classifier as naive
 
 
 
@@ -103,17 +104,26 @@ if __name__ == "__main__":
     # Model Training LSTM
     #neural_classifier.lstm_classification()
 
-    # Model Testing SVM
+    # Model Testing LSTM
     #neural_classifier.classification_report()
 
     # Clustering using KMeans
-    kmeans_cluster=kmeans.KmeansClusterer(features, tweets)
+    #kmeans_cluster=kmeans.KmeansClusterer(features, tweets)
     
     # Model Training KMeans
     #kmeans_cluster.kmeans_cluster()
 
     # Model Testing KMeans
-    kmeans_cluster.classification_report()
+    #kmeans_cluster.classification_report()
+
+    # Classifying using naive bayes classifier
+    naive_model=naive.NaiveBayes_Classifier(features, tweets)
+
+    # Model Training naive bayes
+    #naive_model.naive_Classifier()
+    
+    # Model Testing naive bayes
+    naive_model.classification_report()
 
 
 

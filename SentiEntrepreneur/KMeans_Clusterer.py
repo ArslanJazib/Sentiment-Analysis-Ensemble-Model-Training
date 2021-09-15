@@ -1,7 +1,7 @@
 import joblib
+import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
-from nltk.tokenize import RegexpTokenizer
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
@@ -26,21 +26,24 @@ class KmeansClusterer(object):
         vectorizer = joblib.load('Resources/Vectorizer.pkl')
         
         # Tranforming test data using count vectorizer
-        self.x_train,self.x_test,self.y_train,self.y_test=train_test_split(self.tweets['lemmatized_text'],self.tweets['target'],test_size=0.2,stratify=self.tweets['target'])
+        self.x_train,self.x_test,self.y_train,self.y_test=train_test_split(self.tweets['lemmatized_text'],kmeans_two_clusters.labels_,test_size=0.2,stratify=kmeans_two_clusters.labels_)
         self.x_test=vectorizer.transform(self.x_test)
 
         # Preditcing test data values
-        prediction = kmeans_two_clusters.predict(self.x_test)
+        prediction = kmeans_two_clusters.predict()
+
+        #unique, counts = np.unique(kmeans_two_clusters.labels_, return_counts=True)
+        #print(dict(zip(unique, counts)))
 
         # Classification report
-        report = classification_report(kmeans_two_clusters.labels_[0:310690],prediction)
+        report = classification_report(self.y_test,prediction)
 
         print(report)
 
 
     def kmeans_cluster(self):
         
-       kmeans_two_clusters = KMeans( init="random", n_clusters=2, n_init=10, max_iter=500, random_state=1,verbose=1)
+       kmeans_two_clusters = KMeans( n_clusters=2, n_init=1000000, random_state=1,verbose=1)
 
        kmeans_two_clusters.fit(self.x_train)
 

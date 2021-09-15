@@ -30,6 +30,9 @@
     <Compile Include="KMeans_Clusterer.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NaiveBayes_Classifier.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NeuralNetwork_Classifier.py">
       <SubType>Code</SubType>
     </Compile>

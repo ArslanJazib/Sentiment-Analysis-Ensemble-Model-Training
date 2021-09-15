@@ -1,16 +1,12 @@
 import joblib
 import numpy as np
 import pandas as pd
-from sklearn.svm import SVC
-from sklearn.multiclass import OneVsRestClassifier
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import BaggingClassifier
 from sklearn.metrics import classification_report
 
-
-
-class SupportVectorMachine:
-    """To create an ensemble SVM Classifier and generate classification report"""
+class NaiveBayes_Classifier(object):
+    """To create an Naive Bayes Classifier and generate classification report"""
 
     def __init__(self, features, tweets):
         self.tweets = tweets
@@ -22,8 +18,8 @@ class SupportVectorMachine:
    
     def classification_report(self):
         
-        # Pre-Trained SVM Classifier
-        svm_classifier = joblib.load('Resources/Svm_Classifier_linear.pkl')
+        # Pre-Trained Naive Bayes Classifier
+        svm_classifier = joblib.load('Resources/NaiveBayes_Classifier.pkl')
 
         # Vectorizer used for training
         vectorizer = joblib.load('Resources/Vectorizer.pkl')
@@ -40,10 +36,9 @@ class SupportVectorMachine:
 
         print(report)
 
-    def svm_ensembleClassifier(self):
-        n_estimators = 10
-        svm_classifier_linear = OneVsRestClassifier(BaggingClassifier(SVC(kernel='linear',verbose=True), max_samples=1.0 / n_estimators, n_estimators=n_estimators,bootstrap=False))
-        svm_classifier_linear.fit(self.x_train,self.y_train)
-        joblib.dump(svm_classifier_linear, 'Resources/Svm_Classifier_linear.pkl')
+    def naive_Classifier(self):
+        naive_model = MultinomialNB()
+        naive_model.fit(self.x_train,self.y_train)
+        joblib.dump(naive_model, 'Resources/NaiveBayes_Classifier.pkl')
 
-        
+

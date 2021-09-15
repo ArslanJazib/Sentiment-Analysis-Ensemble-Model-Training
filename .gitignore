@@ -275,3 +275,4 @@ __pycache__/
 /SentiEntrepreneur/Resources/NeuralNetworkLSTM.h5
 /SentiEntrepreneur/Resources/lstm_tokenizer.pkl
 /SentiEntrepreneur/Resources/KMeans_clusters.pkl
+/SentiEntrepreneur/Resources/NaiveBayes_Classifier.pkl
