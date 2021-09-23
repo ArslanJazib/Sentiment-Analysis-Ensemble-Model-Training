@@ -46,4 +46,6 @@ class SupportVectorMachine:
         svm_classifier_linear.fit(self.x_train,self.y_train)
         joblib.dump(svm_classifier_linear, 'Resources/Svm_Classifier_linear.pkl')
 
+
+
         

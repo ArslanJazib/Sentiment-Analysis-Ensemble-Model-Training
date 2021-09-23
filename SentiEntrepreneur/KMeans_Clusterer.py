@@ -47,3 +47,4 @@ class KmeansClusterer(object):
         kmeans_two_clusters = kmeans_model.fit(x_train)
         # Storing the model in a file
         joblib.dump(kmeans_two_clusters, 'Resources/KMeans_clusters.pkl')
+
