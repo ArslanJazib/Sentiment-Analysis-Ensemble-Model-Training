@@ -4,6 +4,7 @@ import joblib
 import tweepy
 import json
 import nltk
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 from tweepy.streaming import StreamListener
@@ -13,6 +14,9 @@ from tweepy import Stream
 from pandas.api.types import CategoricalDtype
 import Preprocessor 
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from keras.preprocessing.sequence import pad_sequences
+from keras.preprocessing.text import Tokenizer
 from sklearn.metrics import classification_report
 from scipy.sparse import hstack
 import SVM_Classifier
@@ -65,16 +69,123 @@ def generate_preprocessed_csv():
 
 def feature_generator(tweets):
     # Create count vectorizer to extract features from text using frequncy of occurance
+    # For SVM
     vectorizer = CountVectorizer()
+    joblib.dump(vectorizer, 'Resources/SVM_Vectorizer.pkl')
     vectorized_data = vectorizer.fit_transform(tweets['lemmatized_text'])
-    joblib.dump(vectorizer, 'Resources/Vectorizer.pkl')
     indexed_data = hstack((np.array(range(0,vectorized_data.shape[0]))[:,None], vectorized_data))
-    joblib.dump(indexed_data, 'Resources/Sentiment140_features.pkl')
+    joblib.dump(indexed_data, 'Resources/Sentiment140_SVM_features.pkl')
+    # For KMeans
+    vectorizer = TfidfVectorizer(max_features=200000, stop_words='english',use_idf=True, ngram_range=(1,3))
+    joblib.dump(vectorizer, 'Resources/KMeans_Vectorizer.pkl')
+    indexed_data = vectorizer.fit_transform(tweets['lemmatized_text'])
+    joblib.dump(indexed_data, 'Resources/Sentiment140_KMeans_features.pkl')
+    # For Neural Network
+    tokenizer = Tokenizer(num_words=2000, split=' ')
+    tokenizer.fit_on_texts(tweets['lemmatized_text'].values)
+    joblib.dump(tokenizer, 'Resources/LSTM_Tokenizer.pkl')
+    data = tokenizer.texts_to_sequences(tweets['lemmatized_text'].values)
+    data = pad_sequences(data)
+    joblib.dump(data, 'Resources/Sentiment140_LSTM_features.pkl')
     del vectorizer
     del vectorized_data
     del indexed_data
+    del tokenizer
+    del data
 
 
+def model_training(tweets):
+
+    # Choose a model to be trained
+    choice = input(" Press 1 for training SVM Classifier \n Press 2 for training LSTM Neural Network Classifier \n Press 3 for training Naive Bayes Classifier \n Press 4 for training using KMeans Clustering \n Enter Choice: ")
+    
+    if choice=='1':    
+        
+        features = joblib.load('Resources/Sentiment140_SVM_features.pkl')
+
+        # Classifying using support vector machine
+        svm_classifier=SVM_Classifier.SupportVectorMachine(features, tweets)
+        
+        # Model Training SVM
+        svm_classifier.svm_ensembleClassifier()
+        
+
+    elif choice=='2':    
+
+        features = load_model('Resources/Sentiment140_LSTM_features')
+
+        # Classifying using Recurrent Neural Network (LSTM)
+        neural_classifier=neural.NeuralNetwork_Classifier(features,tweets)
+        
+        # Model Training LSTM
+        neural_classifier.lstm_classification()
+        
+
+    elif choice=='3':   
+        
+        features = joblib.load('Resources/Sentiment140_SVM_features.pkl')
+
+        # Classifying using naive bayes classifier
+        naive_model=naive.NaiveBayes_Classifier(features, tweets)
+        
+        # Model Training naive bayes
+        naive_model.naive_Classifier()
+        
+
+    elif choice=='4':
+        
+        features = joblib.load('Resources/Sentiment140_KMeans_features.pkl')
+
+        # Clustering using KMeans
+        kmeans_cluster=kmeans.KmeansClusterer(features, tweets)
+    
+        # Model Training KMeans
+        kmeans_cluster.kmeans_cluster()
+
+
+def classification_reports(tweets):
+    # Choose to get a classification report on a the trained model
+    choice = input(" Press 1 for testing SVM Classifier \n Press 2 for testing LSTM Neural Network Classifier \n Press 3 for testing Naive Bayes Classifier \n Press 4 for testing using KMeans Clustering \n Enter Choice: ")
+    
+    if choice=='1':
+        
+        features = joblib.load('Resources/Sentiment140_SVM_features.pkl')
+
+        # Classifying using support vector machine
+        svm_classifier=SVM_Classifier.SupportVectorMachine(features, tweets)
+        
+        # Model Testing SVM
+        svm_classifier.classification_report()
+        
+
+    elif choice=='2':    
+        # Classifying using Recurrent Neural Network (LSTM)
+        neural_classifier=neural.NeuralNetwork_Classifier(tweets)
+        
+        # Model Testing LSTM
+        neural_classifier.classification_report()
+        
+
+    elif choice=='3':    
+
+        features = joblib.load('Resources/Sentiment140_SVM_features.pkl')
+
+        # Classifying using naive bayes classifier
+        naive_model=naive.NaiveBayes_Classifier(features, tweets)
+        
+        # Model Testing naive bayes
+        naive_model.classification_report()
+        
+
+    elif choice=='4':    
+
+        features = joblib.load('Resources/Sentiment140_KMeans_features.pkl')
+
+        # Clustering using KMeans
+        kmeans_cluster=kmeans.KmeansClusterer(features, tweets)
+    
+        # Model Testing KMeans
+        kmeans_cluster.classification_report()
 
 if __name__ == "__main__":
 
@@ -85,54 +196,15 @@ if __name__ == "__main__":
     tweets = pd.read_csv("Resources/Sentiment140_processed.csv",encoding='latin-1')
 
     # This function will be called once to generate features from the complete dataset
-    #feature_generator(tweets)
+    feature_generator(tweets)
 
-    features = joblib.load('Resources/Sentiment140_features.pkl')
+    # Taking input from user to train a model
+    choice = input(" Press 1 for Model Training  \n Press 2 for Model Testing \n Enter Choice: ")
     
-    # Classifying using support vector machine
-    #svm_classifier=SVM_Classifier.SupportVectorMachine(features, tweets)
-    
-    # Model Training SVM
-    #svm_classifier.svm_ensembleClassifier()
+    if choice=='1':    
+        os.system('cls')
+        model_training(tweets)
 
-    # Model Testing SVM
-    #svm_classifier.classification_report()
-
-    # Classifying using Recurrent Neural Network (LSTM)
-    #neural_classifier=neural.NeuralNetwork_Classifier(tweets)
-
-    # Model Training LSTM
-    #neural_classifier.lstm_classification()
-
-    # Model Testing LSTM
-    #neural_classifier.classification_report()
-
-    # Clustering using KMeans
-    #kmeans_cluster=kmeans.KmeansClusterer(features, tweets)
-    
-    # Model Training KMeans
-    #kmeans_cluster.kmeans_cluster()
-
-    # Model Testing KMeans
-    #kmeans_cluster.classification_report()
-
-    # Classifying using naive bayes classifier
-    naive_model=naive.NaiveBayes_Classifier(features, tweets)
-
-    # Model Training naive bayes
-    #naive_model.naive_Classifier()
-    
-    # Model Testing naive bayes
-    naive_model.classification_report()
-
-
-
-
-
-
-
-
-
-
-
-
+    elif choice=='2':  
+        os.system('cls')
+        classification_reports(tweets)

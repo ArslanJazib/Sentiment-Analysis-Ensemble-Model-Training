@@ -22,7 +22,7 @@ class NaiveBayes_Classifier(object):
         svm_classifier = joblib.load('Resources/NaiveBayes_Classifier.pkl')
 
         # Vectorizer used for training
-        vectorizer = joblib.load('Resources/Vectorizer.pkl')
+        vectorizer = joblib.load('Resources/SVM_Vectorizer.pkl')
         
         # Tranforming test data using count vectorizer
         self.x_train,self.x_test,self.y_train,self.y_test=train_test_split(self.tweets['lemmatized_text'],self.tweets['target'],test_size=0.2,stratify=self.tweets['target'])

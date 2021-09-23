@@ -276,3 +276,7 @@ __pycache__/
 /SentiEntrepreneur/Resources/lstm_tokenizer.pkl
 /SentiEntrepreneur/Resources/KMeans_clusters.pkl
 /SentiEntrepreneur/Resources/NaiveBayes_Classifier.pkl
+/SentiEntrepreneur/Resources/Sentiment140_SVM_features.pkl
+/SentiEntrepreneur/Resources/Sentiment140_LSTM_features.pkl
+/SentiEntrepreneur/Resources/Sentiment140_KMeans_features.pkl
+/SentiEntrepreneur/Resources/KMeans_Vectorizer.pkl
