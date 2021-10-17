@@ -24,9 +24,6 @@
     <Compile Include="Api_Authentication.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataSet_insight.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="KMeans_Clusterer.py">
       <SubType>Code</SubType>
     </Compile>

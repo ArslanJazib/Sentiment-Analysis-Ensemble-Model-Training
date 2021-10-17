@@ -1,30 +1,23 @@
-import pandas as pd
-import time
-import joblib
-import tweepy
-import json
-import nltk
 import os
-import matplotlib.pyplot as plt
+import time
+import nltk
+import json
+import tweepy
+import joblib
 import numpy as np
-from tweepy.streaming import StreamListener
-from tweepy import OAuthHandler
-from tweepy import API
-from tweepy import Stream
-from pandas.api.types import CategoricalDtype
+import pandas as pd
 import Preprocessor 
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from keras.preprocessing.sequence import pad_sequences
-from keras.preprocessing.text import Tokenizer
-from sklearn.metrics import classification_report
-from scipy.sparse import hstack
 import SVM_Classifier
-import NeuralNetwork_Classifier as neural
 import KMeans_Clusterer as kmeans
 import NaiveBayes_Classifier as naive
-
-
+import Api_Authentication as twitterApi
+import NeuralNetwork_Classifier as neural
+from scipy.sparse import hstack
+from keras.preprocessing.text import Tokenizer
+from sklearn.metrics import classification_report
+from keras.preprocessing.sequence import pad_sequences
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 
@@ -159,8 +152,11 @@ def classification_reports(tweets):
         
 
     elif choice=='2':    
+
+        features = load_model('Resources/Sentiment140_LSTM_features')
+
         # Classifying using Recurrent Neural Network (LSTM)
-        neural_classifier=neural.NeuralNetwork_Classifier(tweets)
+        neural_classifier=neural.NeuralNetwork_Classifier(features,tweets)
         
         # Model Testing LSTM
         neural_classifier.classification_report()
@@ -196,10 +192,10 @@ if __name__ == "__main__":
     tweets = pd.read_csv("Resources/Sentiment140_processed.csv",encoding='latin-1')
 
     # This function will be called once to generate features from the complete dataset
-    feature_generator(tweets)
+    #feature_generator(tweets)
 
     # Taking input from user to train a model
-    choice = input(" Press 1 for Model Training  \n Press 2 for Model Testing \n Enter Choice: ")
+    choice = input(" Press 1 for Model Training  \n Press 2 for Model Testing \n Press 3 for Live Data Extraction \n Enter Choice: ")
     
     if choice=='1':    
         os.system('cls')
@@ -208,5 +204,9 @@ if __name__ == "__main__":
     elif choice=='2':  
         os.system('cls')
         classification_reports(tweets)
+
+    elif choice=='3':  
+        os.system('cls')
+        twitterApi
 
 

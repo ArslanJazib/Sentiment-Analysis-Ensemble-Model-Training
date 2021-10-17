@@ -1,7 +1,7 @@
-import pandas as pd
 import re, nltk
-from nltk.stem import WordNetLemmatizer
+import pandas as pd
 from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize 
 
 class Data_Preprocessor:

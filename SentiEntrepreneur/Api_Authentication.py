@@ -1,56 +1,12 @@
-import pandas as pd
 import time
-import tweepy
 import json
-import matplotlib.pyplot as plt
+import tweepy
 import numpy as np
-from tweepy.streaming import StreamListener
-from tweepy import OAuthHandler
+import pandas as pd
 from tweepy import API
 from tweepy import Stream
-from pandas.api.types import CategoricalDtype
-from plotnine import *
-from wordcloud import WordCloud ,STOPWORDS
-from plotnine import ggplot, aes, geom_bar
-from gensim.utils import simple_preprocess
-from gensim.models import CoherenceModel
-
-def term_documentMatrix(tweets):
-    #  limit features to 20 terms
-    vect = CountVectorizer(min_df=0., max_df=1.0, max_features=len(tweets))
-    Z = vect.fit_transform(tweets)
-    tdm=pd.DataFrame(Z.A, columns=vect.get_feature_names())
-    tdm=tdm.transpose()
-    tdm.index.name = "Terms"
-    print(tdm.to_string())
-    return tdm
-
-def visualizations(tdm,tweets):
-    # Bar PLot
-    sum=tdm.sum(axis = 1).reset_index(name ="Count")
-    plot=ggplot(sum,aes(x="Terms",y="Count")) + geom_bar(stat="identity") +\
-    xlab("Terms") + ylab("Count") + coord_flip()
-    print(plot)
-    # Word Cloud
-    text = tweets
-    wordcloud = WordCloud(
-        width = 3000,
-        height = 2000,
-        background_color = 'white',
-        stopwords = STOPWORDS
-        ).generate(str(text))
-    plt.figure(2)
-    plt.imshow(wordcloud, interpolation = 'bilinear')
-    plt.axis('off')
-    plt.tight_layout(pad=0)
-    plt.show()
-
-def findAssociations(tdm,word_list,corr_coef):
-    similarity_matrix=pd.DataFrame(np.corrcoef(tdm.T),index=tdm.index,columns=tdm.index)
-    print(similarity_matrix)
-    for value in word_list:
-        print(value)
-        print(similarity_matrix[similarity_matrix[value]>corr_coef][value].sort_values(ascending=False),"\n")
+from tweepy import OAuthHandler
+from tweepy.streaming import StreamListener
 
 
 tweet_list=[]
@@ -59,22 +15,23 @@ class SListener(StreamListener):
         super(SListener,self).__init__()
         self.num_tweets=0
         self.file=open("tweet.txt","w")
+    
     def on_status (self,status):
         tweet=status._json
         # All in lowercase
-        tweet['text']=tweet['text'].lower()
+        #tweet['text']=tweet['text'].lower()
         # Remove emoji
-        tweet['text']=removeEmojify(tweet['text'])
+        #tweet['text']=removeEmojify(tweet['text'])
         # Remove URL
-        tweet['text']=removeUrl(tweet['text'])
+        #tweet['text']=removeUrl(tweet['text'])
         # Remove Stop words
-        tweet['text']=removeStopwords(tweet['text'])
+        #tweet['text']=removeStopwords(tweet['text'])
         # Stemming Tweets
         # For displaying differnce between Stemming and Lemmatization
-        temp=tweet['text']
-        tweet['text']=stemmer(tweet['text'])
+        #temp=tweet['text']
+        #tweet['text']=stemmer(tweet['text'])
         # Lemmatizing Tweets
-        temp=lemmatizer(temp)
+        #temp=lemmatizer(temp)
         self.file.write(json.dumps(tweet)+ '\n')
         tweet_list.append(status)
         self.num_tweets+=1
@@ -112,31 +69,24 @@ def flatten_tweets():
     return tweets_list
 
 class Api_Authentication(object):
-    """description of class"""
-    #start_time = time.time()
-    #consumer_key=" "
-    #consumer_secret=""
-    #access_token=" "
-    #access_token_secret=""
-    #auth = OAuthHandler(consumer_key,consumer_secret)
-    #auth.set_access_token(access_token,access_token_secret)
-    #listen = SListener()
-    #stream = Stream(auth,listen)
-    #stream.filter(track=['Python'],languages=["en"]);
-    #tweets = flatten_tweets()
+    """"""
+    consumer_key="hqdSn31cvUUMEZZwqJreGDsaZ"
+    consumer_secret="ZWJEHxuJB9DKw4HEDTZ4tMM0h4BpFTEXMNZBb3aIsvt8aMbxJP"
+    access_token="1089143318380986373-fxmqHcDgZJ0GUNLiwCslHJckcU55VR"
+    access_token_secret="ws7iluXMr15eQykR1ur771v87K2p4mPbxzhMutVr6AI73"
+    auth = OAuthHandler(consumer_key,consumer_secret)
+    auth.set_access_token(access_token,access_token_secret)
+    listen = SListener()
+    stream = Stream(auth,listen)
+    stream.filter(track=['Python'],languages=["en"]);
+    tweets = flatten_tweets()
     # Create a DataFrame from `tweets`
-    #ds_tweets = pd.DataFrame(tweets)
+    ds_tweets = pd.DataFrame(tweets)
     # Print out tweets from this dataset
-    #print(ds_tweets['text'].values)
-    # Term Document Matrix
-    #tdm=term_documentMatrix(ds_tweets['text'].values)
-    # Finding associations
-    #findAssociations(tdm,[tdm.index[0],tdm.index[1]],0.8)
-    # Word Cloud and Bar Chart
-    #visualizations(tdm,ds_tweets['text'].values)    
+    print(ds_tweets['text'].values)
     # Counting the data collected using the API
-    #print("Total tweets collected",len(ds_tweets.index))
-    #print("-----------------------Execution Time-----------------------")
-    #print("--- %s seconds ---" % (time.time() - start_time))
+    print("Total tweets collected",len(ds_tweets.index))
+    print("-----------------------Execution Time-----------------------")
+    print("--- %s seconds ---" % (time.time() - start_time))
 
 
