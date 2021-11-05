@@ -93,7 +93,7 @@ def feature_generator(tweets):
 def model_training(tweets):
 
     # Choose a model to be trained
-    choice = input(" Press 1 for training SVM Classifier \n Press 2 for training LSTM Neural Network Classifier \n Press 3 for training Naive Bayes Classifier \n Press 4 for training using KMeans Clustering \n Press 5 for training using Ensemble Classifier \n Enter Choice: ")
+    choice = input(" Press 1 for training SVM Classifier \n Press 2 for training LSTM Neural Network Classifier \n Press 3 for training Naive Bayes Classifier \n Press 4 for training using KMeans Clustering  \n Enter Choice: ")
     
     if choice=='1':    
         
@@ -137,13 +137,6 @@ def model_training(tweets):
     
         # Model Training KMeans
         kmeans_cluster.kmeans_cluster()
-
-    elif choice=='5':    
-        # Clustering using KMeans
-        ensemble_model=ensembleModel.Ensemble_Classifier(tweets)
-
-        # Model Training KMeans
-        ensemble_model.ensemble_Classifier()
     
 
 
@@ -197,14 +190,11 @@ def classification_reports(tweets):
         kmeans_cluster.classification_report()
 
     elif choice=='5':    
+        # Classification using Ensemble
+        ensemble_model=ensembleModel.Ensemble_Classifier(tweets)
 
-        features = joblib.load('Resources/Sentiment140_KMeans_features.pkl')
-
-        # Clustering using KMeans
-        kmeans_cluster=kmeans.KmeansClusterer(features, tweets)
-    
-        # Model Testing KMeans
-        kmeans_cluster.classification_report()
+        # Model Training Ensemble
+        ensemble_model.ensemble_Classifier()
 
 if __name__ == "__main__":
 
