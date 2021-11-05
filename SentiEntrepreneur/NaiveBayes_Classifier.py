@@ -17,19 +17,22 @@ class NaiveBayes_Classifier(object):
         self.x_test = self.x_test[:,1:]
    
     def classification_report(self):
-        
         # Pre-Trained Naive Bayes Classifier
         naive_classifier = joblib.load('Resources/NaiveBayes_Classifier.pkl')
 
         # Vectorizer used for training
         vectorizer = joblib.load('Resources/SVM_Vectorizer.pkl')
-        
+
+        # Tranforming test data using count vectorizer
+        self.x_train,self.x_test,self.y_train,self.y_test=train_test_split(self.tweets['lemmatized_text'],self.tweets['target'],test_size=0.2,stratify=self.tweets['target'])
+        self.x_test=vectorizer.transform(self.x_test)
 
         # Preditcing test data values
         prediction=naive_classifier.predict(self.x_test)
 
         # Classification report
         report = classification_report(self.y_test, prediction)
+        joblib.dump(prediction, 'Resources/Naive_Predictions.pkl')
 
         print(report)
 

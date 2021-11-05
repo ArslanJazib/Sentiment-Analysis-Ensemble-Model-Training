@@ -1,14 +1,16 @@
 import re
+import joblib
 import numpy as np
 import pandas as pd
-from sklearn.feature_extraction.text import CountVectorizer
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
-from keras.layers import Dense, Embedding, LSTM, SpatialDropout1D
-from sklearn.model_selection import train_test_split
+from keras.models import load_model
+from keras.preprocessing.text import Tokenizer
 from keras.utils.np_utils import to_categorical
 from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split
+from keras.preprocessing.sequence import pad_sequences
+from sklearn.feature_extraction.text import CountVectorizer
+from keras.layers import Dense, Embedding, LSTM, SpatialDropout1D
 
 
 
@@ -49,7 +51,7 @@ class NeuralNetwork_Classifier(object):
         lstm_classifier = load_model('Resources/NeuralNetworkLSTM.h5')
 
         # LSTM Tokenizer used for training
-        tokenizer = load_model('Resources/LSTM_Tokenizer')
+        tokenizer = joblib.load('Resources/lstm_tokenizer.pkl')
         tokenizer.fit_on_texts(self.tweets['lemmatized_text'].values)
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.tweets['lemmatized_text'], self.tweets['target'], test_size=0.20, random_state=42)
         self.X_test = tokenizer.texts_to_sequences(self.X_test)
@@ -57,6 +59,7 @@ class NeuralNetwork_Classifier(object):
 
         # Preditcing test data values
         prediction=lstm_classifier.predict_classes(self.X_test)
+        joblib.dump(prediction, 'Resources/LSTM_Predictions.pkl')
 
         # Classification report
         report = classification_report(self.y_test, prediction)

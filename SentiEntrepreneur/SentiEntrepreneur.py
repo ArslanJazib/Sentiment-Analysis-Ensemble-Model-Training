@@ -8,11 +8,13 @@ import numpy as np
 import pandas as pd
 import Preprocessor 
 import SVM_Classifier
+from scipy.sparse import hstack
 import KMeans_Clusterer as kmeans
+from keras.models import load_model
 import NaiveBayes_Classifier as naive
 import Api_Authentication as twitterApi
 import NeuralNetwork_Classifier as neural
-from scipy.sparse import hstack
+import Ensemble_Classifier as ensembleModel
 from keras.preprocessing.text import Tokenizer
 from sklearn.metrics import classification_report
 from keras.preprocessing.sequence import pad_sequences
@@ -64,6 +66,7 @@ def feature_generator(tweets):
     # Create count vectorizer to extract features from text using frequncy of occurance
     # For SVM
     vectorizer = CountVectorizer()
+    vectorizer.fit_transform(tweets['lemmatized_text'])
     joblib.dump(vectorizer, 'Resources/SVM_Vectorizer.pkl')
     vectorized_data = vectorizer.fit_transform(tweets['lemmatized_text'])
     indexed_data = hstack((np.array(range(0,vectorized_data.shape[0]))[:,None], vectorized_data))
@@ -90,7 +93,7 @@ def feature_generator(tweets):
 def model_training(tweets):
 
     # Choose a model to be trained
-    choice = input(" Press 1 for training SVM Classifier \n Press 2 for training LSTM Neural Network Classifier \n Press 3 for training Naive Bayes Classifier \n Press 4 for training using KMeans Clustering \n Enter Choice: ")
+    choice = input(" Press 1 for training SVM Classifier \n Press 2 for training LSTM Neural Network Classifier \n Press 3 for training Naive Bayes Classifier \n Press 4 for training using KMeans Clustering \n Press 5 for training using Ensemble Classifier \n Enter Choice: ")
     
     if choice=='1':    
         
@@ -135,14 +138,24 @@ def model_training(tweets):
         # Model Training KMeans
         kmeans_cluster.kmeans_cluster()
 
+    elif choice=='5':    
+        # Clustering using KMeans
+        ensemble_model=ensembleModel.Ensemble_Classifier(tweets)
+
+        # Model Training KMeans
+        ensemble_model.ensemble_Classifier()
+    
+
+
 
 def classification_reports(tweets):
     # Choose to get a classification report on a the trained model
-    choice = input(" Press 1 for testing SVM Classifier \n Press 2 for testing LSTM Neural Network Classifier \n Press 3 for testing Naive Bayes Classifier \n Press 4 for testing using KMeans Clustering \n Enter Choice: ")
+    choice = input(" Press 1 for testing SVM Classifier \n Press 2 for testing LSTM Neural Network Classifier \n Press 3 for testing Naive Bayes Classifier \n Press 4 for testing using KMeans Clustering \n Press 5 for testing using Ensemble Classifier \n Enter Choice: ")
     
     if choice=='1':
         
         features = joblib.load('Resources/Sentiment140_SVM_features.pkl')
+
 
         # Classifying using support vector machine
         svm_classifier=SVM_Classifier.SupportVectorMachine(features, tweets)
@@ -153,7 +166,7 @@ def classification_reports(tweets):
 
     elif choice=='2':    
 
-        features = load_model('Resources/Sentiment140_LSTM_features')
+        features = joblib.load('Resources/Sentiment140_LSTM_features.pkl')
 
         # Classifying using Recurrent Neural Network (LSTM)
         neural_classifier=neural.NeuralNetwork_Classifier(features,tweets)
@@ -174,6 +187,16 @@ def classification_reports(tweets):
         
 
     elif choice=='4':    
+
+        features = joblib.load('Resources/Sentiment140_KMeans_features.pkl')
+
+        # Clustering using KMeans
+        kmeans_cluster=kmeans.KmeansClusterer(features, tweets)
+    
+        # Model Testing KMeans
+        kmeans_cluster.classification_report()
+
+    elif choice=='5':    
 
         features = joblib.load('Resources/Sentiment140_KMeans_features.pkl')
 
@@ -208,5 +231,13 @@ if __name__ == "__main__":
     elif choice=='3':  
         os.system('cls')
         twitterApi
+
+    os.system("pause")
+
+
+
+
+
+
 
 

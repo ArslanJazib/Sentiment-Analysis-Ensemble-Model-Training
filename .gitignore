@@ -280,3 +280,8 @@ __pycache__/
 /SentiEntrepreneur/Resources/Sentiment140_LSTM_features.pkl
 /SentiEntrepreneur/Resources/Sentiment140_KMeans_features.pkl
 /SentiEntrepreneur/Resources/KMeans_Vectorizer.pkl
+/SentiEntrepreneur/Resources/Ensemble_Classifier.pkl
+/SentiEntrepreneur/Resources/Ensemble_Predictions.pkl
+/SentiEntrepreneur/Resources/LSTM_Predictions.pkl
+/SentiEntrepreneur/Resources/Naive_Predictions.pkl
+/SentiEntrepreneur/Resources/SVM_Predictions.pkl

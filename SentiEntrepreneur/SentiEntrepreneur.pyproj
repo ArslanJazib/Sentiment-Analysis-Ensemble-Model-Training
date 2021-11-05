@@ -24,6 +24,9 @@
     <Compile Include="Api_Authentication.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Ensemble_Classifier.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="KMeans_Clusterer.py">
       <SubType>Code</SubType>
     </Compile>

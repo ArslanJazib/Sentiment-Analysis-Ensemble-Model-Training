@@ -34,6 +34,7 @@ class SupportVectorMachine:
 
         # Preditcing test data values
         prediction=svm_classifier.predict(self.x_test)
+        joblib.dump(prediction, 'Resources/SVM_Predictions.pkl')
 
         # Classification report
         report = classification_report(self.y_test, prediction)

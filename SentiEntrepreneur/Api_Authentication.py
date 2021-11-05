@@ -45,48 +45,48 @@ class SListener(StreamListener):
 def flatten_tweets():
     """ Flattens out tweet dictionaries so relevant JSON
         is in a top-level dictionary."""
-    tweets_list = []
+    #tweets_list = []
    
     # Iterate through each tweet
-    for tweet in open('tweet.txt','r'):
-        tweet_obj = json.loads(tweet)
+    #for tweet in open('tweet.txt','r'):
+        #tweet_obj = json.loads(tweet)
         # Store the user screen name in 'user-screen_name'
-        tweet_obj['user-screen_name'] = tweet_obj['user']['screen_name']
+        #tweet_obj['user-screen_name'] = tweet_obj['user']['screen_name']
     
         # Check if this is a 140+ character tweet
-        if 'extended_tweet' in tweet_obj:
+        #if 'extended_tweet' in tweet_obj:
             # Store the extended tweet text in 'extended_tweet-full_text'
-            tweet_obj['extended_tweet-full_text'] = tweet_obj['extended_tweet']['full_text']
+            #tweet_obj['extended_tweet-full_text'] = tweet_obj['extended_tweet']['full_text']
     
-        if 'retweeted_status' in tweet_obj:
+        #if 'retweeted_status' in tweet_obj:
             # Store the retweet user screen name in 'retweeted_status-user-screen_name'
-            tweet_obj['retweeted_status-user-screen_name'] = tweet_obj['retweeted_status']['user']['screen_name']
+            #tweet_obj['retweeted_status-user-screen_name'] = tweet_obj['retweeted_status']['user']['screen_name']
 
             # Store the retweet text in 'retweeted_status-text'
-            tweet_obj['retweeted_status-text'] = tweet_obj['retweeted_status']['text']
+            #tweet_obj['retweeted_status-text'] = tweet_obj['retweeted_status']['text']
             
-        tweets_list.append(tweet_obj)
-    return tweets_list
+        #tweets_list.append(tweet_obj)
+    #return tweets_list
 
 class Api_Authentication(object):
     """"""
-    consumer_key="hqdSn31cvUUMEZZwqJreGDsaZ"
-    consumer_secret="ZWJEHxuJB9DKw4HEDTZ4tMM0h4BpFTEXMNZBb3aIsvt8aMbxJP"
-    access_token="1089143318380986373-fxmqHcDgZJ0GUNLiwCslHJckcU55VR"
-    access_token_secret="ws7iluXMr15eQykR1ur771v87K2p4mPbxzhMutVr6AI73"
-    auth = OAuthHandler(consumer_key,consumer_secret)
-    auth.set_access_token(access_token,access_token_secret)
-    listen = SListener()
-    stream = Stream(auth,listen)
-    stream.filter(track=['Python'],languages=["en"]);
-    tweets = flatten_tweets()
+    #consumer_key="hqdSn31cvUUMEZZwqJreGDsaZ"
+    #consumer_secret="ZWJEHxuJB9DKw4HEDTZ4tMM0h4BpFTEXMNZBb3aIsvt8aMbxJP"
+    #access_token="1089143318380986373-fxmqHcDgZJ0GUNLiwCslHJckcU55VR"
+    #access_token_secret="ws7iluXMr15eQykR1ur771v87K2p4mPbxzhMutVr6AI73"
+    #auth = OAuthHandler(consumer_key,consumer_secret)
+    #auth.set_access_token(access_token,access_token_secret)
+    #listen = SListener()
+    #stream = Stream(auth,listen)
+    #stream.filter(track=['Python'],languages=["en"]);
+    #tweets = flatten_tweets()
     # Create a DataFrame from `tweets`
-    ds_tweets = pd.DataFrame(tweets)
+    #ds_tweets = pd.DataFrame(tweets)
     # Print out tweets from this dataset
-    print(ds_tweets['text'].values)
+    #print(ds_tweets['text'].values)
     # Counting the data collected using the API
-    print("Total tweets collected",len(ds_tweets.index))
-    print("-----------------------Execution Time-----------------------")
-    print("--- %s seconds ---" % (time.time() - start_time))
+    #print("Total tweets collected",len(ds_tweets.index))
+    #print("-----------------------Execution Time-----------------------")
+    #print("--- %s seconds ---" % (time.time() - start_time))
 
 
