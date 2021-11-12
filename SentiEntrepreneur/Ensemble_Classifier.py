@@ -28,16 +28,16 @@ class Ensemble_Classifier(object):
         # Vectorizer used for training
         vectorizer = joblib.load('Resources/SVM_Vectorizer.pkl')
         
-        # Tranforming test data using count vectorizer
+        # Transforming test data using count vectorizer
         svm_naive_tweets=vectorizer.transform(self.x_test)
 
-        # Preditcing test data values
+        # Predicting test data values
         svm_prediction=svm_classifier.predict(svm_naive_tweets)
 
         # Pre-Trained Naive Bayes Classifier
         naive_classifier = joblib.load('Resources/NaiveBayes_Classifier.pkl')
 
-        # Preditcing test data values
+        # Predicting test data values
         naive_prediction=naive_classifier.predict(svm_naive_tweets)
 
         # Pre-Trained LSTM Classifier

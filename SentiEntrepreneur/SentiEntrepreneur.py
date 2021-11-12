@@ -198,6 +198,8 @@ def classification_reports(tweets):
 
 if __name__ == "__main__":
 
+    os.system('cls')
+
     # This function is to be called once for the Data Pre-Processing Phase
     #generate_preprocessed_csv()
 
