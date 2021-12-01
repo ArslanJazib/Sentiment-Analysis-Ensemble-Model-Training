@@ -58,7 +58,7 @@ class NeuralNetwork_Classifier(object):
         self.X_test = pad_sequences(self.X_test)
 
         # Preditcing test data values
-        prediction=lstm_classifier.predict_classes(self.X_test)
+        prediction=(lstm_classifier.predict(self.X_test) > 0.5).astype("int32")
         joblib.dump(prediction, 'Resources/LSTM_Predictions.pkl')
 
         # Classification report

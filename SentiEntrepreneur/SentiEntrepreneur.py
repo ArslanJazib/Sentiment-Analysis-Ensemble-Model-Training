@@ -210,7 +210,7 @@ if __name__ == "__main__":
     #feature_generator(tweets)
 
     # Taking input from user to train a model
-    choice = input(" Press 1 for Model Training  \n Press 2 for Model Testing \n Press 3 for Live Data Extraction \n Enter Choice: ")
+    choice = input(" Press 1 for Model Training  \n Press 2 for Model Testing \n Press 3 for Web Application Script Testing \n Enter Choice: ")
     
     if choice=='1':    
         os.system('cls')
@@ -222,7 +222,12 @@ if __name__ == "__main__":
 
     elif choice=='3':  
         os.system('cls')
-        twitterApi
+        
+        # Classification using Ensemble
+        ensemble_model=ensembleModel.Ensemble_Classifier(tweets)
+
+        # Model Training Ensemble
+        ensemble_model.sentimentAnalyzer("This is a good test sample")
 
     os.system("pause")
 
