@@ -5,6 +5,7 @@ from sklearn.svm import SVC
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import BaggingClassifier
+from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 
 
@@ -40,6 +41,9 @@ class SupportVectorMachine:
         report = classification_report(self.y_test, prediction)
 
         print(report)
+        
+        print(confusion_matrix(self.y_test, prediction))
+
 
     def svm_ensembleClassifier(self):
         n_estimators = 10

@@ -2,6 +2,7 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
@@ -32,9 +33,10 @@ class NaiveBayes_Classifier(object):
 
         # Classification report
         report = classification_report(self.y_test, prediction)
-        joblib.dump(prediction, 'Resources/Naive_Predictions.pkl')
-
+        #joblib.dump(prediction, 'Resources/Naive_Predictions.pkl')
         print(report)
+        print(confusion_matrix(self.y_test, prediction))
+
 
     def naive_Classifier(self):
         naive_model = MultinomialNB()

@@ -10,6 +10,7 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.sequence import pad_sequences
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import confusion_matrix
 from keras.layers import Dense, Embedding, LSTM, SpatialDropout1D
 
 
@@ -59,12 +60,12 @@ class NeuralNetwork_Classifier(object):
 
         # Preditcing test data values
         prediction=(lstm_classifier.predict(self.X_test) > 0.5).astype("int32")
-        joblib.dump(prediction, 'Resources/LSTM_Predictions.pkl')
+        #joblib.dump(prediction, 'Resources/LSTM_Predictions.pkl')
 
         # Classification report
         report = classification_report(self.y_test, prediction)
-
         print(report)
+        print(confusion_matrix(self.y_test, prediction))
 
 
 
